@@ -14,7 +14,7 @@ from setup_db import setup_database
 
 def main():
     show_commands()
-    session = setup_database()
+    session = setup_database("sqlite.db")
     user_input = switch()
     if user_input == "register":
         register(session)
@@ -69,14 +69,14 @@ def create_expense(session, by_date=False):
             day_month_year = expense_date.split(".")
             day, month, year = list(map(int, day_month_year))
             category_title, price = expense_info.split("-")
-            category = category_insert(session, category_title.upper())
+            category = category_insert(session, category_title)
             expense_insert(
                 session, category.category_id, user.user_id, price, year, month, day
             )
         else:
             expense_input = input("You expense in format: \ncategory-price\nеда-500\n")
             category_title, price = expense_input.split("-")
-            category = category_insert(session, category_title.upper())
+            category = category_insert(session, category_title)
             expense_insert(session, category.category_id, user.user_id, price)
             return None
     else:
@@ -110,6 +110,7 @@ def delete_all_expenses(session):
     get_expenses_by_params(session, user_id=user.user_id).delete()
     session.commit()
     print("You data is deleted")
+    return None
 
 
 def auth_user(session):

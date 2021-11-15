@@ -15,7 +15,7 @@ def category_insert(session, category_title):
     :param category_title:
     :return: returns created category
     """
-    category = Category(title=category_title)
+    category = Category(title=category_title.upper())
     session.add(category)
     try:
         session.commit()
@@ -100,7 +100,7 @@ def get_user(session, username, password):
     :return: user if found, else None
     """
     user = session.query(User).filter_by(username=username).first()
-    if bcrypt.checkpw(password.encode("utf-8"), user.password):
+    if user and bcrypt.checkpw(password.encode("utf-8"), user.password):
         return user
     return None
 
